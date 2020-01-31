@@ -73,6 +73,19 @@ body {
   img{
       height: 50px;
   }
+.home-image-wrapper{
+ 
+  margin-left: 20px;
+  float: right;
+}
+.home-image{
+  height: 300px;  
+}
+.home-image-wrapper:after{
+content: " ";
+clear: both;
+display: block;
+}
 
   i{
       position: absolute;
