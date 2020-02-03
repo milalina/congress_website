@@ -21,31 +21,31 @@
     </header>
 
     <nav class="navbar">
-        <a href="#home">Home</a>
+        <a id="home" href="#">Home</a>
         <div class="dropdown">
             <button class="dropbtn">Congress 113</button>
             <div class="dropdown-content">
-                <a href="#">House</a>
-                <a href="#">Senate</a>
+                <a id="info-house" href="#">House</a>
+                <a id="info-sentate" href="#">Senate</a>
             </div>
         </div>
         <div class="dropdown">
             <button class="dropbtn">Attendance</button>
             <div class="dropdown-content">
-                <a href="#">House</a>
-                <a href="#">Senate</a>
+                <a id="attendance-house" href="#">House</a>
+                <a id="attendance-senate" href="#">Senate</a>
             </div>
         </div>
         <div class="dropdown">
             <button class="dropbtn">Party Loyalty</button>
             <div class="dropdown-content">
-                <a href="#">House</a>
-                <a href="#">Senate</a>
+                <a id="loyalty-house" href="#">House</a>
+                <a id="loyalty-senate" href="#">Senate</a>
             </div>
         </div>
     </nav>
     <main>
-        <div class="text">
+        <div id="text">
             <h3>About Us</h3>
             <div class="home-image-wrapper">
                 <img class="home-image" src="-1x-1.jpg" alt="" srcset="">
@@ -111,13 +111,17 @@
                     Acts
                     (AIAs) or equivalent laws were passed in Denmark and Norway in 1970.</p>
             </span>
+            <button onclick="myFunction()" id="myBtn">Read more</button>
         </div>
-        <button onclick="myFunction()" id="myBtn">Read more</button>
+      <div id="congress"></div>
+      <div id="attendace"></div>
+      <div id="loyalty"></div>
     </main>
     <div class="footer">
         <span class="footer-text"> &copy; 2020 TGIF | All Rights Reserved</span>
     </div>
-    <script src="home.js"></script>
+    <script type="module" src="home.js"></script>
+    <script type="module" src="info_congress.js"></script>
 </body>
 
 </html>

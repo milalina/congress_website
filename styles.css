@@ -125,6 +125,7 @@ main{
     height: 40px;
     width: 90px;
   }
-  .text{
+  #text{
       color: slategrey; 
+      text-align: justify;
   }
