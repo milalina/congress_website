@@ -19,8 +19,9 @@ const divForHomePage = document.getElementById('text')
 const divForCongress = document.getElementById('congress');
 const divForAttendance = document.getElementById('attendance');
 const divForLoyalty = document.getElementById('loyalty')
-const spinner =document.getElementById('spinner')
-spinner.style.display='none';
+const spinner = document.getElementById('spinner')
+spinner.style.display = 'none';
+divForCongress.style.display = ('none');
 
 const linkForHomePage = document.getElementById('home')
 const linkInfoHouse = document.getElementById('info-house')
@@ -34,11 +35,12 @@ const linkLoyalySenate = document.getElementById('loyalty-senate')
 
 linkForHomePage.addEventListener('click', () => {
   divForHomePage.style.display = ('block')
+  
 });
 linkInfoHouse.addEventListener('click', () => {
   divForHomePage.style.display = ('none');
   spinner.style.display = ('block')
-  const tableDiv = document.getElementById("congress");
+  const tableDiv = document.getElementById("congress-info-table-div");
   tableDiv.innerHTML = '';
   let module = import('./info_congress.js')
     .then((module) => {
@@ -48,12 +50,12 @@ linkInfoHouse.addEventListener('click', () => {
 linkInfoSenate.addEventListener('click', () => {
   divForHomePage.style.display = ('none')
   spinner.style.display = ('block')
-  const tableDiv = document.getElementById("congress");
+  const tableDiv = document.getElementById("congress-info-table-div");
   tableDiv.innerHTML = '';
   let module = import('./info_congress.js')
-  .then((module) => {
-    module.provideData('senate')
-  });
+    .then((module) => {
+      module.provideData('senate')
+    });
 });
 linkAttendanceHouse.addEventListener('click', () => {
   divForHomePage.style.display = ('none')
@@ -66,14 +68,87 @@ linkLoyaltyHouse.addEventListener('click', () => {
 });
 linkLoyalySenate.addEventListener('click', () => {
   divForHomePage.style.display = ('none')
+
 });
 
-//BUILD TABLES
+//-----------------------INFO PAGE------------------------------
+
+//BUILD CHECKBOXES FOR INFO PAGE
+
+const buildCheckBoxes = (arr) => {
+  const pageDiv = document.getElementById('check-boxes-div');
+  const captionTag = document.createElement('p')
+  captionTag.textContent = ('Filter by Party:')
+  pageDiv.appendChild(captionTag)
+  const formDiv = document.createElement('form');
+  for (let i = 0; i < arr.length; i++) {
+    const inputDiv = document.createElement('input');
+    const labelTag = document.createElement('label');
+    if (arr[i] == 'D') {
+      labelTag.textContent = ('Democrat')
+    } else if (arr[i] == 'R') {
+      labelTag.textContent = ('Republican')
+    } else {
+      labelTag.textContent = ('Independent')
+    }
+    inputDiv.setAttribute('type', 'checkbox');
+    inputDiv.setAttribute('name', 'party');
+    inputDiv.setAttribute('value', arr[i]);
+    inputDiv.addEventListener('click', () => {
+      readCheckboxesValue();
+    })
+    formDiv.appendChild(inputDiv);
+    formDiv.appendChild(labelTag);
+  }
+  pageDiv.appendChild(formDiv)
+}
+buildCheckBoxes(['D', 'R', 'I'])
+
+//BUILD DROPDOWN FOR INFO PAGE
+
+export const buildDropdown = (arr) => {
+  const uniqueStatesArray = [];
+  for (let i = 0; i < arr.length; i++) {
+    if (uniqueStatesArray.indexOf(arr[i].state) === -1) {
+      uniqueStatesArray.push(arr[i].state)
+    }
+  }
+  uniqueStatesArray.sort()
+  const dropdownDiv = document.getElementById('dropdown-div')
+  const selectDiv = document.createElement('select')
+  console.log(dropdownDiv)
+  dropdownDiv.appendChild(selectDiv)
+  selectDiv.id='selectedState'
+  selectDiv.addEventListener('change',()=>{
+    readCheckboxesValue()
+  })
+  const optionAll = document.createElement('option')
+  optionAll.textContent = ('ALL STATES')
+  optionAll.setAttribute = ('value', 'all')
+  selectDiv.appendChild(optionAll)
+  for (let j = 0; j < uniqueStatesArray.length; j++) {
+    const optionState = document.createElement('option')
+    optionState.textContent = (uniqueStatesArray[j])
+    optionState.setAttribute = ('value', uniqueStatesArray[j])
+    selectDiv.appendChild(optionState)
+  }
+}
+
+const readCheckboxesValue = () => {
+  const checkBoxesValue = Array.from(document.querySelectorAll('input[name=party]:checked')).map(elt => elt.value)
+  const selectedState = document.querySelector('#selectedState').value
+  let module = import('./info_congress.js')
+    .then((module) => {
+      module.createFilteredMemberArray(checkBoxesValue, selectedState)
+    })
+}
+
+//BUILD TABLE FOR INFO PAGE
 
 export const buildInfoTable = (id, headArray, dataArray) => {
   console.log(dataArray)
   const tableDiv = document.getElementById(id);
-  tableDiv.innerHTML='';
+  tableDiv.innerHTML = '';
   const tbl = document.createElement('table');
   const tblHead = document.createElement('thead');
   const tblBody = document.createElement('tbody');
@@ -92,22 +167,22 @@ export const buildInfoTable = (id, headArray, dataArray) => {
     const tblCellParty = document.createElement('td')
     const tblCellState = document.createElement('td')
     const tblCellSeniority = document.createElement('td')
-    const tblCellNameVotes = document.createElement('td')
+    const tblCellVotes = document.createElement('td')
 
     if (dataArray[j].middle_name === null) {
       tblCellName.textContent = (`${dataArray[j].first_name} ${dataArray[j].last_name}`)
     } else {
       tblCellName.textContent = (`${dataArray[j].first_name} ${dataArray[j].middle_name} ${dataArray[j].last_name}`)
     }
-    tblCellParty.textContent =(dataArray[j].party)
-    tblCellState.textContent =(dataArray[j].state)
-    tblCellSeniority.textContent =(dataArray[j].seniority)
-    tblCellNameVotes.textContent=(dataArray[j].votes_with_party_pct)
+    tblCellParty.textContent = (dataArray[j].party)
+    tblCellState.textContent = (dataArray[j].state)
+    tblCellSeniority.textContent = (dataArray[j].seniority)
+    tblCellVotes.textContent = (dataArray[j].votes_with_party_pct)
     tblRow.appendChild(tblCellName)
     tblRow.appendChild(tblCellParty)
     tblRow.appendChild(tblCellState)
     tblRow.appendChild(tblCellSeniority)
-    tblRow.appendChild(tblCellNameVotes)
+    tblRow.appendChild(tblCellVotes)
     tblBody.appendChild(tblRow)
   }
   tbl.appendChild(tblBody)
