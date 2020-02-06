@@ -48,6 +48,7 @@ linkInfoHouse.addEventListener('click', () => {
     });
 })
 linkInfoSenate.addEventListener('click', () => {
+  divForCongress.style.display = ('none');
   divForHomePage.style.display = ('none')
   spinner.style.display = ('block')
   const tableDiv = document.getElementById("congress-info-table-div");
@@ -59,6 +60,9 @@ linkInfoSenate.addEventListener('click', () => {
 });
 linkAttendanceHouse.addEventListener('click', () => {
   divForHomePage.style.display = ('none')
+  divForCongress.style.display = ('none');
+  spinner.style.display = ('block')
+
 });
 linkAttendanceSenate.addEventListener('click', () => {
   divForHomePage.style.display = ('none')
@@ -107,6 +111,8 @@ buildCheckBoxes(['D', 'R', 'I'])
 //BUILD DROPDOWN FOR INFO PAGE
 
 export const buildDropdown = (arr) => {
+  const dropdownDiv = document.getElementById('dropdown-div')
+  dropdownDiv.innerHTML=''
   const uniqueStatesArray = [];
   for (let i = 0; i < arr.length; i++) {
     if (uniqueStatesArray.indexOf(arr[i].state) === -1) {
@@ -114,7 +120,6 @@ export const buildDropdown = (arr) => {
     }
   }
   uniqueStatesArray.sort()
-  const dropdownDiv = document.getElementById('dropdown-div')
   const selectDiv = document.createElement('select')
   console.log(dropdownDiv)
   dropdownDiv.appendChild(selectDiv)
@@ -183,6 +188,35 @@ export const buildInfoTable = (id, headArray, dataArray) => {
     tblRow.appendChild(tblCellState)
     tblRow.appendChild(tblCellSeniority)
     tblRow.appendChild(tblCellVotes)
+    tblBody.appendChild(tblRow)
+  }
+  tbl.appendChild(tblBody)
+}
+
+//Build table for attendance page
+
+const buildAttendanceTable = (id, headArray, dataArray) => {
+  console.log(dataArray)
+  const tableDiv = document.getElementById(id);
+  tableDiv.innerHTML = '';
+  const tbl = document.createElement('table');
+  const tblHead = document.createElement('thead');
+  const tblBody = document.createElement('tbody');
+
+  for (let i = 0; i < headArray.length; i++) {
+    const headCell = document.createElement('th');
+    headCell.textContent = (headArray[i]);
+    tblHead.appendChild(headCell);
+  }
+  tbl.appendChild(tblHead);
+  tableDiv.appendChild(tbl);
+  const tblRow = document.createElement('tr')
+  const tblCell = document.createElement('td')
+  for (let j = 0; j < dataArray.length; j++) {
+    for(let m=0; m<dataArray[j]; m++){
+      tblCell.textContent=dataArray[j][m];
+      tblRow.appendChild(tblCell)
+    }
     tblBody.appendChild(tblRow)
   }
   tbl.appendChild(tblBody)
