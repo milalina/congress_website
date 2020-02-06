@@ -1,7 +1,6 @@
 //fetch data
 
 const getAtAGlanceData = async (val) => {
-    console.log(val)
     const response = await fetch(
         `https://api.propublica.org/congress/v1/116/${val}/members.json`, {
             method: "GET",
@@ -15,7 +14,7 @@ const getAtAGlanceData = async (val) => {
     return memberArray;
 }
 
-const processRawData = async (data) => {
+const processRawDataForGlanceTable = async (data) => {
 
     //count total N of members
 
@@ -48,7 +47,6 @@ const processRawData = async (data) => {
             data.forEach(member => {
                 sum += member.votes_with_party_pct
             })
-            console.log(sum)
             average = sum / data.length
         }
         return Math.round(average);
@@ -87,4 +85,51 @@ const processRawData = async (data) => {
         headArray,
         dataArray
     };
+}
+
+
+const processRawDataForLeastTable = async (data) => {
+    let votesArray = [];
+    let lowAttendMemberArray = []
+    data.forEach(member => votesArray.push(member.missed_votes))
+    votesArray.sort((a, b) => {
+        return b - a;
+    })
+    cutOffPoint = votesArray[Math.round(votesArray.length * 0.1)]
+    lowAttendMemberArray.push(data.filter(member => member.missed_votes >= cutOffPoint))
+    const headArray = ['Name', 'No of Missed Votes', '% Missed']
+    let dataArray = [ ];
+    for(var i=0; i<lowAttendMemberArray[0].length; i++){
+        dataArray.push( {
+         name: lowAttendMemberArray[0][i].first_name +' '+ lowAttendMemberArray[0][i].last_name,
+         missed:lowAttendMemberArray[0][i].missed_votes, 
+         pct:lowAttendMemberArray[0][i].missed_votes_pct
+        })
+    }
+    const id = "a-least"
+    return{id, headArray, dataArray}
+}
+
+
+const processRawDataForMostTable = async (data) => {
+    let votesArray = [];
+    let lowAttendMemberArray = []
+    data.forEach(member => votesArray.push(member.missed_votes))
+    votesArray.sort((a, b) => {
+        return b - a;
+    })
+    cutOffPoint = votesArray[Math.round(votesArray.length * 0.9)]
+    lowAttendMemberArray.push(data.filter(member => member.missed_votes <= cutOffPoint))
+    const headArray = ['Name', 'No of Missed Votes', '% Missed']
+    let dataArray = [ ];
+    for(var i=0; i<lowAttendMemberArray[0].length; i++){
+        dataArray.push( {
+         name: lowAttendMemberArray[0][i].first_name +' '+ lowAttendMemberArray[0][i].last_name,
+         missed:lowAttendMemberArray[0][i].missed_votes, 
+         pct:lowAttendMemberArray[0][i].missed_votes_pct
+        })
+    }
+    const id = "a-most"
+    return{id, headArray, dataArray}
+
 }

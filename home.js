@@ -65,16 +65,31 @@ linkAttendanceHouse.addEventListener('click', () => {
   spinner.style.display = ('block')
   const houseRawData = async (val) => {
     const data = await getAtAGlanceData(val)
-    const processData = await processRawData(data)
+    const dataForLeast= await processRawDataForLeastTable(data)
+    .then(dataForLeast=> buildMostLeastAttTable(dataForLeast))
+    const dataForMost= await processRawDataForMostTable(data)
+    .then(dataForMost=> buildMostLeastAttTable(dataForMost))
+    const processData = await processRawDataForGlanceTable (data)
       .then(processData => buildAttendanceTable(processData))
-    // buildAttendanceTable(data)
-    // console.log(processData)
-    // return processData;
+    
   }
   houseRawData('house')
 });
 linkAttendanceSenate.addEventListener('click', () => {
   divForHomePage.style.display = ('none')
+  divForCongress.style.display = ('none');
+  spinner.style.display = ('block')
+  const houseRawData = async (val) => {
+    const data = await getAtAGlanceData(val)
+    const dataForLeast= await processRawDataForLeastTable(data)
+    .then(dataForLeast=> buildMostLeastAttTable(dataForLeast))
+    const dataForMost= await processRawDataForMostTable(data)
+    .then(dataForMost=> buildMostLeastAttTable(dataForMost))
+    const processData = await processRawDataForGlanceTable (data)
+      .then(processData => buildAttendanceTable(processData))
+    
+  }
+  houseRawData('senate')
 });
 linkLoyaltyHouse.addEventListener('click', () => {
   divForHomePage.style.display = ('none')
@@ -122,6 +137,9 @@ buildCheckBoxes(['D', 'R', 'I'])
 export const buildDropdown = (arr) => {
   const dropdownDiv = document.getElementById('dropdown-div')
   dropdownDiv.innerHTML = ''
+  const captionTag = document.createElement('p')
+  captionTag.textContent = ('Filter by State:')
+  dropdownDiv.appendChild(captionTag)
   const uniqueStatesArray = [];
   for (let i = 0; i < arr.length; i++) {
     if (uniqueStatesArray.indexOf(arr[i].state) === -1) {
@@ -192,6 +210,10 @@ export const buildInfoTable = (id, headArray, dataArray) => {
     tblCellState.textContent = (dataArray[j].state)
     tblCellSeniority.textContent = (dataArray[j].seniority)
     tblCellVotes.textContent = (dataArray[j].votes_with_party_pct)
+    tblCellParty.classList='centered-content'
+    tblCellState.classList='centered-content'
+    tblCellSeniority.classList='centered-content'
+    tblCellVotes.classList='centered-content'
     tblRow.appendChild(tblCellName)
     tblRow.appendChild(tblCellParty)
     tblRow.appendChild(tblCellState)
@@ -232,6 +254,45 @@ const buildAttendanceTable = (data) => {
     tblCell1.textContent = dataArray[j].name;
     tblCell2.textContent = dataArray[j].reps;
     tblCell3.textContent = dataArray[j].voted_w_party;
+    tblRow.appendChild(tblCell1)
+    tblRow.appendChild(tblCell2)
+    tblRow.appendChild(tblCell3)
+    tblBody.appendChild(tblRow)
+  }
+  tbl.appendChild(tblBody)
+}
+
+const buildMostLeastAttTable=(data)=>{
+console.log(data)
+  const {
+    id,
+    headArray,
+    dataArray,
+  } = data;
+  const tableDiv = document.getElementById(id);
+  tableDiv.innerHTML = '';
+  const tbl = document.createElement('table');
+  const tblHead = document.createElement('thead');
+  const tblBody = document.createElement('tbody');
+
+  for (let i = 0; i < headArray.length; i++) {
+    const headCell = document.createElement('th');
+    headCell.textContent = (headArray[i]);
+    tblHead.appendChild(headCell);
+  }
+  tbl.appendChild(tblHead);
+  tableDiv.appendChild(tbl);
+  dataArray.sort((a, b)=> {
+    return  b.pct - a.pct;
+})
+  for (let j = 0; j < dataArray.length; j++){
+    const tblRow = document.createElement('tr')
+    const tblCell1 = document.createElement('td')
+    const tblCell2 = document.createElement('td')
+    const tblCell3 = document.createElement('td')
+    tblCell1.textContent = dataArray[j].name;
+    tblCell2.textContent = dataArray[j].missed;
+    tblCell3.textContent = dataArray[j].pct;
     tblRow.appendChild(tblCell1)
     tblRow.appendChild(tblCell2)
     tblRow.appendChild(tblCell3)
