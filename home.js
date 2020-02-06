@@ -35,7 +35,8 @@ const linkLoyalySenate = document.getElementById('loyalty-senate')
 
 linkForHomePage.addEventListener('click', () => {
   divForHomePage.style.display = ('block')
-  
+  spinner.style.display = 'none';
+
 });
 linkInfoHouse.addEventListener('click', () => {
   divForHomePage.style.display = ('none');
@@ -62,7 +63,15 @@ linkAttendanceHouse.addEventListener('click', () => {
   divForHomePage.style.display = ('none')
   divForCongress.style.display = ('none');
   spinner.style.display = ('block')
-
+  const houseRawData = async (val) => {
+    const data = await getAtAGlanceData(val)
+    const processData = await processRawData(data)
+      .then(processData => buildAttendanceTable(processData))
+    // buildAttendanceTable(data)
+    // console.log(processData)
+    // return processData;
+  }
+  houseRawData('house')
 });
 linkAttendanceSenate.addEventListener('click', () => {
   divForHomePage.style.display = ('none')
@@ -112,7 +121,7 @@ buildCheckBoxes(['D', 'R', 'I'])
 
 export const buildDropdown = (arr) => {
   const dropdownDiv = document.getElementById('dropdown-div')
-  dropdownDiv.innerHTML=''
+  dropdownDiv.innerHTML = ''
   const uniqueStatesArray = [];
   for (let i = 0; i < arr.length; i++) {
     if (uniqueStatesArray.indexOf(arr[i].state) === -1) {
@@ -123,8 +132,8 @@ export const buildDropdown = (arr) => {
   const selectDiv = document.createElement('select')
   console.log(dropdownDiv)
   dropdownDiv.appendChild(selectDiv)
-  selectDiv.id='selectedState'
-  selectDiv.addEventListener('change',()=>{
+  selectDiv.id = 'selectedState'
+  selectDiv.addEventListener('change', () => {
     readCheckboxesValue()
   })
   const optionAll = document.createElement('option')
@@ -195,8 +204,13 @@ export const buildInfoTable = (id, headArray, dataArray) => {
 
 //Build table for attendance page
 
-const buildAttendanceTable = (id, headArray, dataArray) => {
-  console.log(dataArray)
+const buildAttendanceTable = (data) => {
+  spinner.style.display = 'none';
+  const {
+    id,
+    headArray,
+    dataArray,
+  } = data;
   const tableDiv = document.getElementById(id);
   tableDiv.innerHTML = '';
   const tbl = document.createElement('table');
@@ -210,13 +224,17 @@ const buildAttendanceTable = (id, headArray, dataArray) => {
   }
   tbl.appendChild(tblHead);
   tableDiv.appendChild(tbl);
-  const tblRow = document.createElement('tr')
-  const tblCell = document.createElement('td')
   for (let j = 0; j < dataArray.length; j++) {
-    for(let m=0; m<dataArray[j]; m++){
-      tblCell.textContent=dataArray[j][m];
-      tblRow.appendChild(tblCell)
-    }
+    const tblRow = document.createElement('tr')
+    const tblCell1 = document.createElement('td')
+    const tblCell2 = document.createElement('td')
+    const tblCell3 = document.createElement('td')
+    tblCell1.textContent = dataArray[j].name;
+    tblCell2.textContent = dataArray[j].reps;
+    tblCell3.textContent = dataArray[j].voted_w_party;
+    tblRow.appendChild(tblCell1)
+    tblRow.appendChild(tblCell2)
+    tblRow.appendChild(tblCell3)
     tblBody.appendChild(tblRow)
   }
   tbl.appendChild(tblBody)
