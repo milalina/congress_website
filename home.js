@@ -22,6 +22,8 @@ const divForLoyalty = document.getElementById('loyalty')
 const spinner = document.getElementById('spinner')
 spinner.style.display = 'none';
 divForCongress.style.display = ('none');
+divForAttendance.style.display = ('none');
+divForLoyalty.style.display = ('none');
 
 const linkForHomePage = document.getElementById('home')
 const linkInfoHouse = document.getElementById('info-house')
@@ -36,10 +38,15 @@ const linkLoyalySenate = document.getElementById('loyalty-senate')
 linkForHomePage.addEventListener('click', () => {
   divForHomePage.style.display = ('block')
   spinner.style.display = 'none';
+  divForCongress.style.display = ('none');
+  divForAttendance.style.display = ('none');
+  divForLoyalty.style.display = ('none');
 
 });
 linkInfoHouse.addEventListener('click', () => {
   divForHomePage.style.display = ('none');
+  divForAttendance.style.display = ('none');
+  divForLoyalty.style.display = ('none');
   spinner.style.display = ('block')
   const tableDiv = document.getElementById("congress-info-table-div");
   tableDiv.innerHTML = '';
@@ -49,8 +56,9 @@ linkInfoHouse.addEventListener('click', () => {
     });
 })
 linkInfoSenate.addEventListener('click', () => {
-  divForCongress.style.display = ('none');
   divForHomePage.style.display = ('none')
+  divForAttendance.style.display = ('none');
+  divForLoyalty.style.display = ('none');
   spinner.style.display = ('block')
   const tableDiv = document.getElementById("congress-info-table-div");
   tableDiv.innerHTML = '';
@@ -62,30 +70,38 @@ linkInfoSenate.addEventListener('click', () => {
 linkAttendanceHouse.addEventListener('click', () => {
   divForHomePage.style.display = ('none')
   divForCongress.style.display = ('none');
+  divForLoyalty.style.display = ('none');
   spinner.style.display = ('block')
+  const houseAtAGlanceHead = document.getElementById("a-at-glance-table-head")
+  houseAtAGlanceHead.textContent = "House at a Glance"
   const houseRawData = async (val) => {
     const data = await getAtAGlanceData(val)
-     const dataForLeast = await processRawDataForLeastTable(data)
+    const dataForLeast = await processRawDataForLeastTable("a-least", data)
       .then(dataForLeast => buildMostLeastAttTable(dataForLeast))
-    const dataForMost = await processRawDataForMostTable(data)
-      .then(dataForMost => buildMostLeastAttTable(dataForMost)) 
+      .then(divForAttendance.style.display = ('block'))
+    const dataForMost = await processRawDataForMostTable("a-most", data)
+      .then(dataForMost => buildMostLeastAttTable(dataForMost))
     const dataForAtAGlanceTable = await processRawDataForGlanceTable("at-a-glance", data)
       .then(dataForAtAGlanceTable => buildAttendanceTable(dataForAtAGlanceTable))
- 
+
   }
   houseRawData('house')
 });
 linkAttendanceSenate.addEventListener('click', () => {
   divForHomePage.style.display = ('none')
   divForCongress.style.display = ('none');
+  divForLoyalty.style.display = ('none');
   spinner.style.display = ('block')
+  const senateAtAGlanceHead = document.getElementById("a-at-glance-table-head")
+  senateAtAGlanceHead.textContent = "Senate at a Glance"
   const houseRawData = async (val) => {
     const data = await getAtAGlanceData(val)
-    const dataForLeast = await processRawDataForLeastTable(data)
+    const dataForLeast = await processRawDataForLeastTable("a-least", data)
       .then(dataForLeast => buildMostLeastAttTable(dataForLeast))
-    const dataForMost = await processRawDataForMostTable(data)
+      .then(divForAttendance.style.display = ('block'))
+    const dataForMost = await processRawDataForMostTable("a-most", data)
       .then(dataForMost => buildMostLeastAttTable(dataForMost))
-    const dataForAtAGlanceTable = await processRawDataForGlanceTable("l-at-a-glance", data)
+    const dataForAtAGlanceTable = await processRawDataForGlanceTable("at-a-glance", data)
       .then(dataForAtAGlanceTable => buildAttendanceTable(dataForAtAGlanceTable))
 
   }
@@ -94,14 +110,18 @@ linkAttendanceSenate.addEventListener('click', () => {
 linkLoyaltyHouse.addEventListener('click', () => {
   divForHomePage.style.display = ('none')
   divForCongress.style.display = ('none');
+  divForAttendance.style.display = ('none');
   spinner.style.display = ('block')
+  const houseAtAGlanceHead = document.getElementById("l-at-glance-table-head")
+  houseAtAGlanceHead.textContent = "House at a Glance"
   const houseRawData = async (val) => {
     const data = await getAtAGlanceData(val)
-    const dataForLeast = await processRawDataForLeastTable1(data)
+    const dataForLeast = await processRawDataForLeastTable1("l-a-least", data)
       .then(dataForLeast => buildMostLeastAttTable(dataForLeast))
-    const dataForMost = await processRawDataForMostTable1(data)
+      .then(divForLoyalty.style.display = ('block'))
+    const dataForMost = await processRawDataForMostTable1("l-a-most", data)
       .then(dataForMost => buildMostLeastAttTable(dataForMost))
-    const dataForAtAGlanceTable = await processRawDataForGlanceTable(data)
+    const dataForAtAGlanceTable = await processRawDataForGlanceTable("l-at-a-glance", data)
       .then(dataForAtAGlanceTable => buildAttendanceTable(dataForAtAGlanceTable))
 
   }
@@ -110,14 +130,18 @@ linkLoyaltyHouse.addEventListener('click', () => {
 linkLoyalySenate.addEventListener('click', () => {
   divForHomePage.style.display = ('none')
   divForCongress.style.display = ('none');
+  divForAttendance.style.display = ('none');
   spinner.style.display = ('block')
+  const senateAtAGlanceHead = document.getElementById("l-at-glance-table-head")
+  senateAtAGlanceHead.textContent = "Senate at a Glance"
   const houseRawData = async (val) => {
     const data = await getAtAGlanceData(val)
-    const dataForLeast = await processRawDataForLeastTable1(data)
+    const dataForLeast = await processRawDataForLeastTable1("l-a-least", data)
       .then(dataForLeast => buildMostLeastAttTable(dataForLeast))
-    const dataForMost = await processRawDataForMostTable1(data)
+      .then(divForLoyalty.style.display = ('block'))
+    const dataForMost = await processRawDataForMostTable1("l-a-most", data)
       .then(dataForMost => buildMostLeastAttTable(dataForMost))
-    const dataForAtAGlanceTable = await processRawDataForGlanceTable(data)
+    const dataForAtAGlanceTable = await processRawDataForGlanceTable("l-at-a-glance", data)
       .then(dataForAtAGlanceTable => buildAttendanceTable(dataForAtAGlanceTable))
 
   }
@@ -259,7 +283,7 @@ const buildAttendanceTable = (data) => {
     headArray,
     dataArray,
   } = data;
-  const tableDiv = document.getElementById(tId);
+  const tableDiv = document.getElementById(tId)
   tableDiv.innerHTML = '';
   const tbl = document.createElement('table');
   const tblHead = document.createElement('thead');
@@ -291,11 +315,11 @@ const buildAttendanceTable = (data) => {
 const buildMostLeastAttTable = (data) => {
   console.log(data)
   const {
-    id,
+    tId,
     headArray,
     dataArray,
   } = data;
-  const tableDiv = document.getElementBy(id);
+  const tableDiv = document.getElementById(tId)
   tableDiv.innerHTML = '';
   const tbl = document.createElement('table');
   const tblHead = document.createElement('thead');

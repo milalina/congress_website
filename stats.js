@@ -88,7 +88,7 @@ const processRawDataForGlanceTable = async (id, data) => {
 }
 
 
-const processRawDataForLeastTable = async (data) => {
+const processRawDataForLeastTable = async (id, data) => {
     console.log(data)
     let votesArray = [];
     let lowAttendMemberArray = []
@@ -107,12 +107,12 @@ const processRawDataForLeastTable = async (data) => {
          pct:lowAttendMemberArray[0][i].missed_votes_pct
         })
     }
-    const id = "a-least"
-    return{id, headArray, dataArray}
+    const tId = id
+    return{tId, headArray, dataArray}
 }
 
 
-const processRawDataForMostTable = async (data) => {
+const processRawDataForMostTable = async (id, data) => {
     let votesArray = [];
     let lowAttendMemberArray = []
     data.forEach(member => votesArray.push(member.missed_votes))
@@ -130,12 +130,12 @@ const processRawDataForMostTable = async (data) => {
          pct:lowAttendMemberArray[0][i].missed_votes_pct
         })
     }
-    const id = "a-most"
-    return{id, headArray, dataArray}
+    const tId = id
+    return{tId, headArray, dataArray}
 
 }
 
-const processRawDataForLeastTable1 = async (data) => {
+const processRawDataForLeastTable1 = async (id, data) => {
     console.log(data)
     let votesArray = [];
     let lowAttendMemberArray = []
@@ -157,12 +157,12 @@ const processRawDataForLeastTable1 = async (data) => {
          pct:lowAttendMemberArray[0][i].votes_with_party_pct
         })
     }
-    const id = "a-least"
-    return{id, headArray, dataArray}
+    const tId = id
+    return{tId, headArray, dataArray}
 }
 
 
-const processRawDataForMostTable1 = async (data) => {
+const processRawDataForMostTable1 = async (id, data) => {
     let votesArray = [];
     let lowAttendMemberArray = []
     data.forEach(member => votesArray.push(member.votes_with_party_pct))
@@ -181,7 +181,7 @@ const processRawDataForMostTable1 = async (data) => {
          pct:lowAttendMemberArray[0][i].votes_with_party_pct
         })
     }
-    const id = "a-most"
-    return{id, headArray, dataArray}
+    const tId = id
+    return{tId, headArray, dataArray}
 
 }
