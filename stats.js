@@ -14,7 +14,7 @@ const getAtAGlanceData = async (val) => {
     return memberArray;
 }
 
-const processRawDataForGlanceTable = async (data) => {
+const processRawDataForGlanceTable = async (id, data) => {
 
     //count total N of members
 
@@ -57,7 +57,7 @@ const processRawDataForGlanceTable = async (data) => {
     const votesI = countVotesWPartyPct('I', undefined);
     const votesTotal = countVotesWPartyPct(undefined, 'total');
     // create arrays to display in a table
-    const id = "at-a-glance"
+    const tId = id
     const headArray = ['Party', 'No. of Reps', '% Voted w/ Party']
     const dataArray = [{
             name: "Democrates",
@@ -81,7 +81,7 @@ const processRawDataForGlanceTable = async (data) => {
         }
     ]
     return {
-        id,
+        tId,
         headArray,
         dataArray
     };
@@ -89,6 +89,7 @@ const processRawDataForGlanceTable = async (data) => {
 
 
 const processRawDataForLeastTable = async (data) => {
+    console.log(data)
     let votesArray = [];
     let lowAttendMemberArray = []
     data.forEach(member => votesArray.push(member.missed_votes))
@@ -102,7 +103,7 @@ const processRawDataForLeastTable = async (data) => {
     for(var i=0; i<lowAttendMemberArray[0].length; i++){
         dataArray.push( {
          name: lowAttendMemberArray[0][i].first_name +' '+ lowAttendMemberArray[0][i].last_name,
-         missed:lowAttendMemberArray[0][i].missed_votes, 
+         number:lowAttendMemberArray[0][i].missed_votes, 
          pct:lowAttendMemberArray[0][i].missed_votes_pct
         })
     }
@@ -125,8 +126,59 @@ const processRawDataForMostTable = async (data) => {
     for(var i=0; i<lowAttendMemberArray[0].length; i++){
         dataArray.push( {
          name: lowAttendMemberArray[0][i].first_name +' '+ lowAttendMemberArray[0][i].last_name,
-         missed:lowAttendMemberArray[0][i].missed_votes, 
+         number:lowAttendMemberArray[0][i].missed_votes, 
          pct:lowAttendMemberArray[0][i].missed_votes_pct
+        })
+    }
+    const id = "a-most"
+    return{id, headArray, dataArray}
+
+}
+
+const processRawDataForLeastTable1 = async (data) => {
+    console.log(data)
+    let votesArray = [];
+    let lowAttendMemberArray = []
+    data.forEach(member => votesArray.push(member.votes_with_party_pct))
+    votesArray.sort((a, b) => {
+        return b - a;
+    })
+    console.log(votesArray)
+    cutOffPoint = votesArray[Math.round(votesArray.length * 0.9)]
+    console.log(votesArray[Math.round(votesArray.length * 0.9)])
+    lowAttendMemberArray.push(data.filter(member => member.votes_with_party_pct <= cutOffPoint))
+    const headArray = ['Name', 'No Party Votes', '% Party Votes']
+    let dataArray = [ ];
+    for(var i=0; i<lowAttendMemberArray[0].length; i++){
+        let number_party_votes = lowAttendMemberArray[0][i].total_votes*lowAttendMemberArray[0][i].votes_with_party_pct/100
+        dataArray.push( {
+         name: lowAttendMemberArray[0][i].first_name +' '+ lowAttendMemberArray[0][i].last_name,
+         number:  Math.round(number_party_votes),
+         pct:lowAttendMemberArray[0][i].votes_with_party_pct
+        })
+    }
+    const id = "a-least"
+    return{id, headArray, dataArray}
+}
+
+
+const processRawDataForMostTable1 = async (data) => {
+    let votesArray = [];
+    let lowAttendMemberArray = []
+    data.forEach(member => votesArray.push(member.votes_with_party_pct))
+    votesArray.sort((a, b) => {
+        return b - a;
+    })
+    cutOffPoint = votesArray[Math.round(votesArray.length * 0.1)]
+    lowAttendMemberArray.push(data.filter(member => member.votes_with_party_pct >= cutOffPoint))
+    const headArray = ['Name', 'No Party Votes', '% Party Votes']
+    let dataArray = [ ];
+    for(var i=0; i<lowAttendMemberArray[0].length; i++){
+        let number_party_votes = lowAttendMemberArray[0][i].total_votes*lowAttendMemberArray[0][i].votes_with_party_pct/100
+        dataArray.push( {
+         name: lowAttendMemberArray[0][i].first_name +' '+ lowAttendMemberArray[0][i].last_name,
+         number: Math.round(number_party_votes), 
+         pct:lowAttendMemberArray[0][i].votes_with_party_pct
         })
     }
     const id = "a-most"

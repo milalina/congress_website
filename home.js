@@ -1,4 +1,4 @@
-function myFunction() {
+const myFunction = () => {
   var dots = document.getElementById("dots");
   var moreText = document.getElementById("more");
   var btnText = document.getElementById("myBtn");
@@ -65,13 +65,13 @@ linkAttendanceHouse.addEventListener('click', () => {
   spinner.style.display = ('block')
   const houseRawData = async (val) => {
     const data = await getAtAGlanceData(val)
-    const dataForLeast= await processRawDataForLeastTable(data)
-    .then(dataForLeast=> buildMostLeastAttTable(dataForLeast))
-    const dataForMost= await processRawDataForMostTable(data)
-    .then(dataForMost=> buildMostLeastAttTable(dataForMost))
-    const processData = await processRawDataForGlanceTable (data)
-      .then(processData => buildAttendanceTable(processData))
-    
+     const dataForLeast = await processRawDataForLeastTable(data)
+      .then(dataForLeast => buildMostLeastAttTable(dataForLeast))
+    const dataForMost = await processRawDataForMostTable(data)
+      .then(dataForMost => buildMostLeastAttTable(dataForMost)) 
+    const dataForAtAGlanceTable = await processRawDataForGlanceTable("at-a-glance", data)
+      .then(dataForAtAGlanceTable => buildAttendanceTable(dataForAtAGlanceTable))
+ 
   }
   houseRawData('house')
 });
@@ -81,21 +81,47 @@ linkAttendanceSenate.addEventListener('click', () => {
   spinner.style.display = ('block')
   const houseRawData = async (val) => {
     const data = await getAtAGlanceData(val)
-    const dataForLeast= await processRawDataForLeastTable(data)
-    .then(dataForLeast=> buildMostLeastAttTable(dataForLeast))
-    const dataForMost= await processRawDataForMostTable(data)
-    .then(dataForMost=> buildMostLeastAttTable(dataForMost))
-    const processData = await processRawDataForGlanceTable (data)
-      .then(processData => buildAttendanceTable(processData))
-    
+    const dataForLeast = await processRawDataForLeastTable(data)
+      .then(dataForLeast => buildMostLeastAttTable(dataForLeast))
+    const dataForMost = await processRawDataForMostTable(data)
+      .then(dataForMost => buildMostLeastAttTable(dataForMost))
+    const dataForAtAGlanceTable = await processRawDataForGlanceTable("l-at-a-glance", data)
+      .then(dataForAtAGlanceTable => buildAttendanceTable(dataForAtAGlanceTable))
+
   }
   houseRawData('senate')
 });
 linkLoyaltyHouse.addEventListener('click', () => {
   divForHomePage.style.display = ('none')
+  divForCongress.style.display = ('none');
+  spinner.style.display = ('block')
+  const houseRawData = async (val) => {
+    const data = await getAtAGlanceData(val)
+    const dataForLeast = await processRawDataForLeastTable1(data)
+      .then(dataForLeast => buildMostLeastAttTable(dataForLeast))
+    const dataForMost = await processRawDataForMostTable1(data)
+      .then(dataForMost => buildMostLeastAttTable(dataForMost))
+    const dataForAtAGlanceTable = await processRawDataForGlanceTable(data)
+      .then(dataForAtAGlanceTable => buildAttendanceTable(dataForAtAGlanceTable))
+
+  }
+  houseRawData('house')
 });
 linkLoyalySenate.addEventListener('click', () => {
   divForHomePage.style.display = ('none')
+  divForCongress.style.display = ('none');
+  spinner.style.display = ('block')
+  const houseRawData = async (val) => {
+    const data = await getAtAGlanceData(val)
+    const dataForLeast = await processRawDataForLeastTable1(data)
+      .then(dataForLeast => buildMostLeastAttTable(dataForLeast))
+    const dataForMost = await processRawDataForMostTable1(data)
+      .then(dataForMost => buildMostLeastAttTable(dataForMost))
+    const dataForAtAGlanceTable = await processRawDataForGlanceTable(data)
+      .then(dataForAtAGlanceTable => buildAttendanceTable(dataForAtAGlanceTable))
+
+  }
+  houseRawData('senate')
 
 });
 
@@ -210,10 +236,10 @@ export const buildInfoTable = (id, headArray, dataArray) => {
     tblCellState.textContent = (dataArray[j].state)
     tblCellSeniority.textContent = (dataArray[j].seniority)
     tblCellVotes.textContent = (dataArray[j].votes_with_party_pct)
-    tblCellParty.classList='centered-content'
-    tblCellState.classList='centered-content'
-    tblCellSeniority.classList='centered-content'
-    tblCellVotes.classList='centered-content'
+    tblCellParty.classList = 'centered-content'
+    tblCellState.classList = 'centered-content'
+    tblCellSeniority.classList = 'centered-content'
+    tblCellVotes.classList = 'centered-content'
     tblRow.appendChild(tblCellName)
     tblRow.appendChild(tblCellParty)
     tblRow.appendChild(tblCellState)
@@ -229,11 +255,11 @@ export const buildInfoTable = (id, headArray, dataArray) => {
 const buildAttendanceTable = (data) => {
   spinner.style.display = 'none';
   const {
-    id,
+    tId,
     headArray,
     dataArray,
   } = data;
-  const tableDiv = document.getElementById(id);
+  const tableDiv = document.getElementById(tId);
   tableDiv.innerHTML = '';
   const tbl = document.createElement('table');
   const tblHead = document.createElement('thead');
@@ -262,14 +288,14 @@ const buildAttendanceTable = (data) => {
   tbl.appendChild(tblBody)
 }
 
-const buildMostLeastAttTable=(data)=>{
-console.log(data)
+const buildMostLeastAttTable = (data) => {
+  console.log(data)
   const {
     id,
     headArray,
     dataArray,
   } = data;
-  const tableDiv = document.getElementById(id);
+  const tableDiv = document.getElementBy(id);
   tableDiv.innerHTML = '';
   const tbl = document.createElement('table');
   const tblHead = document.createElement('thead');
@@ -282,16 +308,16 @@ console.log(data)
   }
   tbl.appendChild(tblHead);
   tableDiv.appendChild(tbl);
-  dataArray.sort((a, b)=> {
-    return  b.pct - a.pct;
-})
-  for (let j = 0; j < dataArray.length; j++){
+  dataArray.sort((a, b) => {
+    return b.pct - a.pct;
+  })
+  for (let j = 0; j < dataArray.length; j++) {
     const tblRow = document.createElement('tr')
     const tblCell1 = document.createElement('td')
     const tblCell2 = document.createElement('td')
     const tblCell3 = document.createElement('td')
     tblCell1.textContent = dataArray[j].name;
-    tblCell2.textContent = dataArray[j].missed;
+    tblCell2.textContent = dataArray[j].number;
     tblCell3.textContent = dataArray[j].pct;
     tblRow.appendChild(tblCell1)
     tblRow.appendChild(tblCell2)

@@ -122,7 +122,7 @@
             <div id="congress-info-table-div"></div>
         </div>
         <div id="attendance">
-            <h4>House at Glance</h4>
+            <h4 id="a-at-glance-table-head"></h4>
             <div id="at-a-glance"></div>
             <hr>
             <h4>Least Engaged (Bottom 10% Attendance)</h4>
@@ -130,14 +130,22 @@
             <h4>Most Engaged (Top 10% Attendance)</h4>
             <div id="a-most"></div>
         </div>
-        <div id="loyalty"></div>
+        <div id="loyalty">
+            <h4 id="l-at-glance-table-head"></h4>
+            <div id="l-at-a-glance"></div>
+            <hr>
+            <h4>Least Loyal (Bottom 10% of Party)</h4>
+            <div id="l-a-least"></div>
+            <h4>Most Loyal (Top 10% of Party)</h4>
+            <div id="l-a-most"></div>
+        </div>
     </main>
     <div class="footer">
         <span class="footer-text"> &copy; 2020 TGIF | All Rights Reserved</span>
     </div>
     <script type="module" src="info_congress.js"></script>
     <script type="module" src="home.js"></script>
-    <script src="attendance.js"></script>
+    <script src="stats.js"></script>
 </body>
 
 </html>
