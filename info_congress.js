@@ -63,7 +63,6 @@ export const provideData = (valueForDataFetch) => {
 export const createFilteredMemberArray = (arr, state) => {
     let memberArray1=[];
     memberArray1=memberArray
-    console.log(memberArray)
     if (state != 'ALL STATES'){
         memberArray1 = memberArray.filter(member=>
             member.state == state
