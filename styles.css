@@ -219,6 +219,11 @@ main {
     "area3 area4"
 }
 
+#text-on-att,
+#text-on-loy {
+  grid-area: area1;
+}
+
 .glance-table {
   grid-area: area2;
 }
@@ -229,4 +234,12 @@ main {
 
 .most {
   grid-area: area4;
+}
+
+.justify {
+  text-align: justify;
+}
+
+#filters {
+  text-align: center;
 }

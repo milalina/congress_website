@@ -1,20 +1,3 @@
-const myFunction = () => {
-  var dots = document.getElementById("dots");
-  var moreText = document.getElementById("more");
-  var btnText = document.getElementById("myBtn");
-
-  if (dots.style.display === "none") {
-    dots.style.display = "inline";
-    btnText.innerHTML = "Read more";
-    moreText.style.display = "none";
-  } else {
-    dots.style.display = "none";
-    btnText.innerHTML = "Read less";
-    moreText.style.display = "inline";
-  }
-}
-//function myFunction() taken from https://www.w3schools.com/howto/howto_js_read_more.asp
-
 const divForHomePage = document.getElementById('text')
 const divForCongress = document.getElementById('congress');
 const divForAttendance = document.getElementById('attendance');
@@ -32,12 +15,13 @@ const linkAttendanceHouse = document.getElementById('attendance-house')
 const linkAttendanceSenate = document.getElementById('attendance-senate')
 const linkLoyaltyHouse = document.getElementById('loyalty-house')
 const linkLoyalySenate = document.getElementById('loyalty-senate')
+const dropdownAndCheckboxes = document.getElementById('filters')
 
 //ADD EVENT LISTENERS TO LINKS
 
 linkForHomePage.addEventListener('click', () => {
   divForHomePage.style.display = ('block')
-  spinner.style.display = 'none';
+  spinner.style.display = ('none');
   divForCongress.style.display = ('none');
   divForAttendance.style.display = ('none');
   divForLoyalty.style.display = ('none');
@@ -47,7 +31,9 @@ linkInfoHouse.addEventListener('click', () => {
   divForHomePage.style.display = ('none');
   divForAttendance.style.display = ('none');
   divForLoyalty.style.display = ('none');
-  spinner.style.display = ('block')
+  addText('house');
+  spinner.style.display = ('block');
+  dropdownAndCheckboxes.style.display = ('none')
   const tableDiv = document.getElementById("congress-info-table-div");
   tableDiv.innerHTML = '';
   let module = import('./info_congress.js')
@@ -59,6 +45,8 @@ linkInfoSenate.addEventListener('click', () => {
   divForHomePage.style.display = ('none')
   divForAttendance.style.display = ('none');
   divForLoyalty.style.display = ('none');
+  dropdownAndCheckboxes.style.display = ('none')
+  addText('senate');
   spinner.style.display = ('block')
   const tableDiv = document.getElementById("congress-info-table-div");
   tableDiv.innerHTML = '';
@@ -71,7 +59,9 @@ linkAttendanceHouse.addEventListener('click', () => {
   divForHomePage.style.display = ('none')
   divForCongress.style.display = ('none');
   divForLoyalty.style.display = ('none');
+  divForAttendance.style.display = ('none');
   spinner.style.display = ('block')
+  addText('text-on-att');
   const houseAtAGlanceHead = document.getElementById("a-at-glance-table-head")
   houseAtAGlanceHead.textContent = "House at a Glance"
   const houseRawData = async (val) => {
@@ -91,7 +81,9 @@ linkAttendanceSenate.addEventListener('click', () => {
   divForHomePage.style.display = ('none')
   divForCongress.style.display = ('none');
   divForLoyalty.style.display = ('none');
+  divForAttendance.style.display = ('none');
   spinner.style.display = ('block')
+  addText('text-on-att');
   const senateAtAGlanceHead = document.getElementById("a-at-glance-table-head")
   senateAtAGlanceHead.textContent = "Senate at a Glance"
   const houseRawData = async (val) => {
@@ -111,7 +103,9 @@ linkLoyaltyHouse.addEventListener('click', () => {
   divForHomePage.style.display = ('none')
   divForCongress.style.display = ('none');
   divForAttendance.style.display = ('none');
+  divForLoyalty.style.display = ('none');
   spinner.style.display = ('block')
+  addText('text-on-loy');
   const houseAtAGlanceHead = document.getElementById("l-at-glance-table-head")
   houseAtAGlanceHead.textContent = "House at a Glance"
   const houseRawData = async (val) => {
@@ -131,7 +125,9 @@ linkLoyalySenate.addEventListener('click', () => {
   divForHomePage.style.display = ('none')
   divForCongress.style.display = ('none');
   divForAttendance.style.display = ('none');
+  divForLoyalty.style.display = ('none');
   spinner.style.display = ('block')
+  addText('text-on-loy');
   const senateAtAGlanceHead = document.getElementById("l-at-glance-table-head")
   senateAtAGlanceHead.textContent = "Senate at a Glance"
   const houseRawData = async (val) => {
@@ -155,10 +151,14 @@ linkLoyalySenate.addEventListener('click', () => {
 
 const buildCheckBoxes = (arr) => {
   const pageDiv = document.getElementById('check-boxes-div');
+  pageDiv.style.paddingRight = ('70px')
+  pageDiv.style.display = ('inline-block')
   const captionTag = document.createElement('p')
+  captionTag.style.display = ('inline-block')
   captionTag.textContent = ('Filter by Party:')
   pageDiv.appendChild(captionTag)
   const formDiv = document.createElement('form');
+  formDiv.style.display = ('inline-block')
   for (let i = 0; i < arr.length; i++) {
     const inputDiv = document.createElement('input');
     const labelTag = document.createElement('label');
@@ -186,8 +186,11 @@ buildCheckBoxes(['D', 'R', 'I'])
 
 export const buildDropdown = (arr) => {
   const dropdownDiv = document.getElementById('dropdown-div')
+  dropdownDiv.style.display = ('inline-block')
+  dropdownDiv.style.paddingLeft = ('70px')
   dropdownDiv.innerHTML = ''
   const captionTag = document.createElement('p')
+  captionTag.style.display = ('inline-block')
   captionTag.textContent = ('Filter by State:')
   dropdownDiv.appendChild(captionTag)
   const uniqueStatesArray = [];
@@ -198,7 +201,7 @@ export const buildDropdown = (arr) => {
   }
   uniqueStatesArray.sort()
   const selectDiv = document.createElement('select')
-  console.log(dropdownDiv)
+  dropdownDiv.style.display = ('inline-block')
   dropdownDiv.appendChild(selectDiv)
   selectDiv.id = 'selectedState'
   selectDiv.addEventListener('change', () => {
@@ -228,6 +231,7 @@ const readCheckboxesValue = () => {
 //BUILD TABLE FOR INFO PAGE
 
 export const buildInfoTable = (id, headArray, dataArray) => {
+  dropdownAndCheckboxes.style.display = ('block');
   console.log(dataArray)
   const tableDiv = document.getElementById(id);
   tableDiv.innerHTML = '';
@@ -350,3 +354,32 @@ const buildMostLeastAttTable = (data) => {
   }
   tbl.appendChild(tblBody)
 }
+
+const addText = (id) => {
+  if (id === 'text-on-loy') {
+    document.getElementById(id).innerHTML = `
+  <h4>Party Loyalty</h4>
+  <p class="justify">Those who consider themselves to be strong partisans, strong Democrats and strong Republicans respectively, tend to be the most faithful in voting for their party's nominee for office and legislation that backs their party's agenda. </p>
+`
+  } else if (id === 'text-on-att') {
+    document.getElementById(id).innerHTML = `
+<h4>Attendance</h4>
+<p class="justify">The Constitution specifies that a majority of members constitutes a quorum to do business in each house. Representatives and senators rarely force the presence of a quorum by demanding quorum calls; thus, in most cases, debates continue even if a majority is not present.</p>
+
+<p class="justify">The Senate uses roll-call votes; a clerk calls out the names of all the senators, each senator stating "aye" or "no" when his or her name is announced. The House reserves roll-call votes for the most formal matters, as a roll-call of all 435 representatives takes quite some time; normally, members vote by electronic device. In the case of a tie, the motion in question fails. In the Senate, the Vice President may (if present) cast the tiebreaking vote.</p>
+`
+  } else if (id === 'house') {
+    document.getElementById('congress-text').innerHTML = `
+    <h4>Congressmen</h4>
+    <p class="justify">The major power of the House is to pass federal legislation that affects the entire country, although its bills must also be passed by the Senate and further agreed to by the U.S. President before becoming law (unless both the House and Senate re-pass the legislation with a two-thirds majority in each chamber). The House has some exclusive powers: the power to initiate revenue bills, to impeach officials (impeached officials are subsequently tried in the Senate), and to elect the U.S. President in case there is no majority in the Electoral College.</p>
+    <p class="justify">Each U.S. state is represented in the House in proportion to its population as measured in the census, but every state is entitled to at least one representative. </p>  	    
+    `
+  } else {
+    document.getElementById('congress-text').innerHTML = `
+    <h4>Senators</h4>
+    <p class="justify">First convened in 1789, the composition and powers of the Senate are established in Article One of the U.S. Constitution. Each state is represented by two senators, regardless of population, who serve staggered six-year terms. The Senate has several exclusive powers not granted to the House, including consenting to treaties as a precondition to their ratification and consenting to or confirming appointments of Cabinet secretaries, federal judges, other federal executive officials, military officers, regulatory officials, ambassadors, and other federal uniformed officers, as well as trial of federal officials impeached by the House.</p>
+    `
+  }
+}
+
+addText('text-on-loy');
